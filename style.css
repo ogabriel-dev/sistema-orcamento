@@ -760,6 +760,13 @@ h3 {
     color: var(--text-tertiary);
 }
 
+.field-optional {
+    font-weight: 400;
+    color: var(--text-tertiary);
+    text-transform: none;
+    letter-spacing: 0;
+}
+
 input[type="text"],
 input[type="email"],
 input[type="date"],

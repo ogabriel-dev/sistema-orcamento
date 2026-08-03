@@ -51,6 +51,7 @@ const DB = {
       logo: "",
       phone: "",
       email: "",
+      cnpj: "",
       address: "",
       whatsappMsg:
         "Olá {cliente}! Segue o orçamento nº {numero}, no valor de {valor}. Qualquer dúvida estou à disposição.",
@@ -982,13 +983,51 @@ function generatePdf(id) {
   const primary = [18, 100, 92];
   const gray = [110, 112, 120];
 
+  // Cabeçalho: altura ajustada para acomodar a logo quadrada (~60px / 16mm) e o CNPJ
+  const HEADER_H = 34;
+  const LOGO_SIZE = 16; // mm — equivalente a ~60px a 96dpi
+  const textX = s.logo ? 34 : 14;
+
   doc.setFillColor(...primary);
-  doc.rect(0, 0, 210, 30, "F");
+  doc.rect(0, 0, 210, HEADER_H, "F");
+
+  if (s.logo) {
+    try {
+      const fmt = (s.logo.match(/^data:image\/(\w+);/) || [, "PNG"])[1]
+        .toUpperCase()
+        .replace("JPG", "JPEG");
+      doc.setFillColor(255, 255, 255);
+      doc.roundedRect(
+        14,
+        (HEADER_H - LOGO_SIZE) / 2,
+        LOGO_SIZE,
+        LOGO_SIZE,
+        2,
+        2,
+        "F",
+      );
+      doc.addImage(
+        s.logo,
+        fmt,
+        14,
+        (HEADER_H - LOGO_SIZE) / 2,
+        LOGO_SIZE,
+        LOGO_SIZE,
+        undefined,
+        "FAST",
+      );
+    } catch (err) {
+      console.error("Não foi possível inserir a logo no PDF", err);
+    }
+  }
+
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(16);
-  doc.text(s.companyName || "Sua empresa", 14, 15);
+  doc.text(s.companyName || "Sua empresa", textX, 15);
   doc.setFontSize(10);
-  doc.text([s.phone, s.email].filter(Boolean).join("   ·   "), 14, 22);
+  doc.text([s.phone, s.email].filter(Boolean).join("   ·   "), textX, 22);
+  if (s.cnpj) doc.text("CNPJ: " + s.cnpj, textX, 28);
+
   doc.setFontSize(13);
   doc.text(budgetNumberLabel(b.number), 196, 15, { align: "right" });
   doc.setFontSize(9);
@@ -1001,7 +1040,7 @@ function generatePdf(id) {
 
   doc.setTextColor(30, 30, 30);
   doc.setFontSize(11);
-  doc.text("Cliente", 14, 42);
+  doc.text("Cliente", 14, HEADER_H + 12);
   doc.setFontSize(9.5);
   doc.setTextColor(...gray);
   const clientLines = [
@@ -1011,10 +1050,10 @@ function generatePdf(id) {
     client?.email || "",
     [client?.address, client?.city].filter(Boolean).join(" — "),
   ].filter(Boolean);
-  doc.text(clientLines, 14, 48);
+  doc.text(clientLines, 14, HEADER_H + 18);
 
   doc.autoTable({
-    startY: 48 + clientLines.length * 4.6 + 6,
+    startY: HEADER_H + 18 + clientLines.length * 4.6 + 6,
     head: [["Serviço", "Qtd.", "Valor unit.", "Subtotal"]],
     body: b.items.map((it) => [
       it.desc,
@@ -1359,12 +1398,14 @@ function renderReports() {
    CONFIGURAÇÕES
    ================================================================ */
 attachMask(document.getElementById("settingsPhone"), maskPhone);
+attachMask(document.getElementById("settingsCnpj"), maskDocument);
 
 function fillSettingsForm() {
   const s = state.settings;
   document.getElementById("settingsName").value = s.companyName || "";
   document.getElementById("settingsPhone").value = s.phone || "";
   document.getElementById("settingsEmail").value = s.email || "";
+  document.getElementById("settingsCnpj").value = s.cnpj || "";
   document.getElementById("settingsAddress").value = s.address || "";
   document.getElementById("settingsWhatsappMsg").value = s.whatsappMsg || "";
   updateLogoPreview(s.logo);
@@ -1408,6 +1449,7 @@ document.getElementById("settingsForm").addEventListener("submit", (e) => {
     companyName: document.getElementById("settingsName").value.trim(),
     phone: document.getElementById("settingsPhone").value.trim(),
     email: document.getElementById("settingsEmail").value.trim(),
+    cnpj: document.getElementById("settingsCnpj").value.trim(),
     address: document.getElementById("settingsAddress").value.trim(),
     whatsappMsg: document.getElementById("settingsWhatsappMsg").value.trim(),
     logo: logoImg ? logoImg.src : "",
