@@ -1,713 +1,443 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>OrçaFácil — Gestão de Orçamentos</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-    />
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body data-theme="light">
-    <!-- ============ SIDEBAR ============ -->
-    <aside class="sidebar" id="sidebar">
-      <div class="sidebar-top">
-        <div class="brand">
-          <span class="brand-mark"
-            ><i class="fa-solid fa-file-invoice-dollar"></i
-          ></span>
-          <span class="brand-name">Orça<strong>Fácil</strong></span>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OrçaFácil — Gestão de Orçamentos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-theme="light">
+
+<!-- ============ SIDEBAR ============ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-top">
+    <div class="brand">
+      <span class="brand-mark"><i class="fa-solid fa-file-invoice-dollar"></i></span>
+      <span class="brand-name">Orça<strong>Fácil</strong></span>
+    </div>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Fechar menu"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+
+  <nav class="nav">
+    <button class="nav-item active" data-page="dashboard">
+      <i class="fa-solid fa-grip"></i><span>Dashboard</span>
+    </button>
+    <button class="nav-item" data-page="clientes">
+      <i class="fa-solid fa-users"></i><span>Clientes</span>
+    </button>
+    <button class="nav-item" data-page="novo-orcamento">
+      <i class="fa-solid fa-circle-plus"></i><span>Novo orçamento</span>
+    </button>
+    <button class="nav-item" data-page="historico">
+      <i class="fa-solid fa-clock-rotate-left"></i><span>Histórico</span>
+    </button>
+    <button class="nav-item" data-page="relatorios">
+      <i class="fa-solid fa-chart-simple"></i><span>Relatórios</span>
+    </button>
+    <button class="nav-item" data-page="configuracoes">
+      <i class="fa-solid fa-gear"></i><span>Configurações</span>
+    </button>
+  </nav>
+
+  <div class="sidebar-bottom">
+    <button class="theme-toggle" id="themeToggle">
+      <i class="fa-solid fa-moon"></i><span>Modo escuro</span>
+    </button>
+    <div class="sidebar-company" id="sidebarCompany">
+      <div class="sidebar-company-logo" id="sidebarCompanyLogo"><i class="fa-solid fa-store"></i></div>
+      <div class="sidebar-company-info">
+        <span class="sidebar-company-name" id="sidebarCompanyName">Minha Empresa</span>
+        <span class="sidebar-company-tag">Plano gratuito</span>
+      </div>
+    </div>
+  </div>
+</aside>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- ============ MAIN ============ -->
+<div class="main">
+  <header class="topbar">
+    <button class="menu-btn" id="menuBtn" aria-label="Abrir menu"><i class="fa-solid fa-bars"></i></button>
+    <div class="topbar-title">
+      <h1 id="pageTitle">Dashboard</h1>
+      <p id="pageSubtitle">Visão geral do seu negócio</p>
+    </div>
+    <button class="btn btn-primary topbar-cta" data-page="novo-orcamento">
+      <i class="fa-solid fa-plus"></i><span>Novo orçamento</span>
+    </button>
+  </header>
+
+  <main class="content">
+
+    <!-- ===================== DASHBOARD ===================== -->
+    <section class="page active" id="page-dashboard">
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-icon icon-neutral"><i class="fa-solid fa-users"></i></div>
+          <div class="stat-info"><span class="stat-value" id="statClients">0</span><span class="stat-label">Clientes</span></div>
         </div>
-        <button
-          class="sidebar-close"
-          id="sidebarClose"
-          aria-label="Fechar menu"
-        >
-          <i class="fa-solid fa-xmark"></i>
-        </button>
+        <div class="stat-card">
+          <div class="stat-icon icon-neutral"><i class="fa-solid fa-file-lines"></i></div>
+          <div class="stat-info"><span class="stat-value" id="statBudgets">0</span><span class="stat-label">Orçamentos</span></div>
+        </div>
+        <div class="stat-card stat-card-primary">
+          <div class="stat-icon icon-primary"><i class="fa-solid fa-sack-dollar"></i></div>
+          <div class="stat-info"><span class="stat-value" id="statTotal">R$ 0,00</span><span class="stat-label">Valor total em orçamentos</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon icon-approved"><i class="fa-solid fa-circle-check"></i></div>
+          <div class="stat-info"><span class="stat-value" id="statApproved">0</span><span class="stat-label">Aprovados</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon icon-pending"><i class="fa-solid fa-hourglass-half"></i></div>
+          <div class="stat-info"><span class="stat-value" id="statPending">0</span><span class="stat-label">Pendentes</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon icon-rejected"><i class="fa-solid fa-circle-xmark"></i></div>
+          <div class="stat-info"><span class="stat-value" id="statRejected">0</span><span class="stat-label">Recusados</span></div>
+        </div>
       </div>
 
-      <nav class="nav">
-        <button class="nav-item active" data-page="dashboard">
-          <i class="fa-solid fa-grip"></i><span>Dashboard</span>
-        </button>
-        <button class="nav-item" data-page="clientes">
-          <i class="fa-solid fa-users"></i><span>Clientes</span>
-        </button>
-        <button class="nav-item" data-page="novo-orcamento">
-          <i class="fa-solid fa-circle-plus"></i><span>Novo orçamento</span>
-        </button>
-        <button class="nav-item" data-page="historico">
-          <i class="fa-solid fa-clock-rotate-left"></i><span>Histórico</span>
-        </button>
-        <button class="nav-item" data-page="relatorios">
-          <i class="fa-solid fa-chart-simple"></i><span>Relatórios</span>
-        </button>
-        <button class="nav-item" data-page="configuracoes">
-          <i class="fa-solid fa-gear"></i><span>Configurações</span>
-        </button>
-      </nav>
-
-      <div class="sidebar-bottom">
-        <button class="theme-toggle" id="themeToggle">
-          <i class="fa-solid fa-moon"></i><span>Modo escuro</span>
-        </button>
-        <div class="sidebar-company" id="sidebarCompany">
-          <div class="sidebar-company-logo" id="sidebarCompanyLogo">
-            <i class="fa-solid fa-store"></i>
-          </div>
-          <div class="sidebar-company-info">
-            <span class="sidebar-company-name" id="sidebarCompanyName"
-              >Minha Empresa</span
-            >
-            <span class="sidebar-company-tag">Plano gratuito</span>
-          </div>
+      <div class="panel">
+        <div class="panel-header">
+          <h2>Últimos orçamentos</h2>
+          <button class="link-btn" data-page="historico">Ver histórico <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table" id="recentBudgetsTable">
+            <thead>
+              <tr><th>Nº</th><th>Cliente</th><th>Data</th><th>Valor</th><th>Status</th><th></th></tr>
+            </thead>
+            <tbody id="recentBudgetsBody"></tbody>
+          </table>
+        </div>
+        <div class="empty-state" id="dashboardEmpty" style="display:none;">
+          <i class="fa-solid fa-file-circle-plus"></i>
+          <p>Nenhum orçamento ainda. Crie o primeiro para começar.</p>
+          <button class="btn btn-primary" data-page="novo-orcamento">Criar orçamento</button>
         </div>
       </div>
-    </aside>
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    </section>
 
-    <!-- ============ MAIN ============ -->
-    <div class="main">
-      <header class="topbar">
-        <button class="menu-btn" id="menuBtn" aria-label="Abrir menu">
-          <i class="fa-solid fa-bars"></i>
-        </button>
-        <div class="topbar-title">
-          <h1 id="pageTitle">Dashboard</h1>
-          <p id="pageSubtitle">Visão geral do seu negócio</p>
+    <!-- ===================== CLIENTES ===================== -->
+    <section class="page" id="page-clientes">
+      <div class="panel">
+        <div class="panel-header">
+          <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="clientSearch" placeholder="Pesquisar clientes por nome, empresa ou telefone...">
+          </div>
+          <button class="btn btn-primary" id="btnNewClient"><i class="fa-solid fa-plus"></i><span>Novo cliente</span></button>
         </div>
-        <button class="btn btn-primary topbar-cta" data-page="novo-orcamento">
-          <i class="fa-solid fa-plus"></i><span>Novo orçamento</span>
-        </button>
-      </header>
+        <div class="table-wrap">
+          <table class="data-table" id="clientsTable">
+            <thead>
+              <tr><th>Nome</th><th>Empresa</th><th>Telefone</th><th>Cidade</th><th>Orçamentos</th><th></th></tr>
+            </thead>
+            <tbody id="clientsBody"></tbody>
+          </table>
+        </div>
+        <div class="empty-state" id="clientsEmpty" style="display:none;">
+          <i class="fa-solid fa-user-plus"></i>
+          <p>Nenhum cliente cadastrado ainda.</p>
+          <button class="btn btn-primary" id="btnNewClientEmpty">Cadastrar cliente</button>
+        </div>
+      </div>
+    </section>
 
-      <main class="content">
-        <!-- ===================== DASHBOARD ===================== -->
-        <section class="page active" id="page-dashboard">
-          <div class="stat-grid">
-            <div class="stat-card">
-              <div class="stat-icon icon-neutral">
-                <i class="fa-solid fa-users"></i>
-              </div>
-              <div class="stat-info">
-                <span class="stat-value" id="statClients">0</span
-                ><span class="stat-label">Clientes</span>
-              </div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon icon-neutral">
-                <i class="fa-solid fa-file-lines"></i>
-              </div>
-              <div class="stat-info">
-                <span class="stat-value" id="statBudgets">0</span
-                ><span class="stat-label">Orçamentos</span>
-              </div>
-            </div>
-            <div class="stat-card stat-card-primary">
-              <div class="stat-icon icon-primary">
-                <i class="fa-solid fa-sack-dollar"></i>
-              </div>
-              <div class="stat-info">
-                <span class="stat-value" id="statTotal">R$ 0,00</span
-                ><span class="stat-label">Valor total em orçamentos</span>
-              </div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon icon-approved">
-                <i class="fa-solid fa-circle-check"></i>
-              </div>
-              <div class="stat-info">
-                <span class="stat-value" id="statApproved">0</span
-                ><span class="stat-label">Aprovados</span>
-              </div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon icon-pending">
-                <i class="fa-solid fa-hourglass-half"></i>
-              </div>
-              <div class="stat-info">
-                <span class="stat-value" id="statPending">0</span
-                ><span class="stat-label">Pendentes</span>
-              </div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon icon-rejected">
-                <i class="fa-solid fa-circle-xmark"></i>
-              </div>
-              <div class="stat-info">
-                <span class="stat-value" id="statRejected">0</span
-                ><span class="stat-label">Recusados</span>
-              </div>
+    <!-- ===================== NOVO ORÇAMENTO ===================== -->
+    <section class="page" id="page-novo-orcamento">
+      <form id="budgetForm" class="budget-form" novalidate>
+        <input type="hidden" id="budgetId">
+        <div class="form-grid">
+
+          <div class="panel">
+            <div class="panel-header"><h2>Cliente</h2></div>
+            <div class="field">
+              <label for="budgetClient">Selecione um cliente *</label>
+              <select id="budgetClient" required>
+                <option value="">Escolha um cliente cadastrado...</option>
+              </select>
+              <p class="field-hint">Não encontrou? <button type="button" class="link-btn-inline" id="quickAddClient">Cadastrar novo cliente</button></p>
             </div>
           </div>
 
           <div class="panel">
             <div class="panel-header">
-              <h2>Últimos orçamentos</h2>
-              <button class="link-btn" data-page="historico">
-                Ver histórico <i class="fa-solid fa-arrow-right"></i>
-              </button>
+              <h2>Serviços</h2>
+              <button type="button" class="btn btn-secondary btn-sm" id="btnAddService"><i class="fa-solid fa-plus"></i><span>Adicionar serviço</span></button>
             </div>
             <div class="table-wrap">
-              <table class="data-table" id="recentBudgetsTable">
+              <table class="data-table services-table">
                 <thead>
-                  <tr>
-                    <th>Nº</th>
-                    <th>Cliente</th>
-                    <th>Data</th>
-                    <th>Valor</th>
-                    <th>Status</th>
-                    <th></th>
-                  </tr>
+                  <tr><th>Descrição</th><th class="col-num">Qtd.</th><th class="col-num">Valor unit.</th><th class="col-num">Subtotal</th><th></th></tr>
                 </thead>
-                <tbody id="recentBudgetsBody"></tbody>
+                <tbody id="servicesBody"></tbody>
               </table>
             </div>
-            <div class="empty-state" id="dashboardEmpty" style="display: none">
-              <i class="fa-solid fa-file-circle-plus"></i>
-              <p>Nenhum orçamento ainda. Crie o primeiro para começar.</p>
-              <button class="btn btn-primary" data-page="novo-orcamento">
-                Criar orçamento
-              </button>
-            </div>
           </div>
-        </section>
 
-        <!-- ===================== CLIENTES ===================== -->
-        <section class="page" id="page-clientes">
           <div class="panel">
-            <div class="panel-header">
-              <div class="search-box">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input
-                  type="text"
-                  id="clientSearch"
-                  placeholder="Pesquisar clientes por nome, empresa ou telefone..."
-                />
-              </div>
-              <button class="btn btn-primary" id="btnNewClient">
-                <i class="fa-solid fa-plus"></i><span>Novo cliente</span>
-              </button>
-            </div>
-            <div class="table-wrap">
-              <table class="data-table" id="clientsTable">
-                <thead>
-                  <tr>
-                    <th>Nome</th>
-                    <th>Empresa</th>
-                    <th>Telefone</th>
-                    <th>Cidade</th>
-                    <th>Orçamentos</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody id="clientsBody"></tbody>
-              </table>
-            </div>
-            <div class="empty-state" id="clientsEmpty" style="display: none">
-              <i class="fa-solid fa-user-plus"></i>
-              <p>Nenhum cliente cadastrado ainda.</p>
-              <button class="btn btn-primary" id="btnNewClientEmpty">
-                Cadastrar cliente
-              </button>
-            </div>
-          </div>
-        </section>
-
-        <!-- ===================== NOVO ORÇAMENTO ===================== -->
-        <section class="page" id="page-novo-orcamento">
-          <form id="budgetForm" class="budget-form" novalidate>
-            <input type="hidden" id="budgetId" />
-            <div class="form-grid">
-              <div class="panel">
-                <div class="panel-header"><h2>Cliente</h2></div>
-                <div class="field">
-                  <label for="budgetClient">Selecione um cliente *</label>
-                  <select id="budgetClient" required>
-                    <option value="">Escolha um cliente cadastrado...</option>
-                  </select>
-                  <p class="field-hint">
-                    Não encontrou?
-                    <button
-                      type="button"
-                      class="link-btn-inline"
-                      id="quickAddClient"
-                    >
-                      Cadastrar novo cliente
-                    </button>
-                  </p>
+            <div class="panel-header"><h2>Detalhes adicionais</h2></div>
+            <div class="field-row">
+              <div class="field">
+                <label for="budgetDiscount">Desconto</label>
+                <div class="input-combo">
+                  <input type="number" id="budgetDiscount" min="0" step="0.01" value="0">
+                  <select id="budgetDiscountType"><option value="value">R$</option><option value="percent">%</option></select>
                 </div>
               </div>
-
-              <div class="panel">
-                <div class="panel-header">
-                  <h2>Serviços</h2>
-                  <button
-                    type="button"
-                    class="btn btn-secondary btn-sm"
-                    id="btnAddService"
-                  >
-                    <i class="fa-solid fa-plus"></i
-                    ><span>Adicionar serviço</span>
-                  </button>
-                </div>
-                <div class="table-wrap">
-                  <table class="data-table services-table">
-                    <thead>
-                      <tr>
-                        <th>Descrição</th>
-                        <th class="col-num">Qtd.</th>
-                        <th class="col-num">Valor unit.</th>
-                        <th class="col-num">Subtotal</th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tbody id="servicesBody"></tbody>
-                  </table>
-                </div>
-              </div>
-
-              <div class="panel">
-                <div class="panel-header"><h2>Detalhes adicionais</h2></div>
-                <div class="field-row">
-                  <div class="field">
-                    <label for="budgetDiscount">Desconto</label>
-                    <div class="input-combo">
-                      <input
-                        type="number"
-                        id="budgetDiscount"
-                        min="0"
-                        step="0.01"
-                        value="0"
-                      />
-                      <select id="budgetDiscountType">
-                        <option value="value">R$</option>
-                        <option value="percent">%</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="field">
-                    <label for="budgetFee">Taxa</label>
-                    <div class="input-combo">
-                      <input
-                        type="number"
-                        id="budgetFee"
-                        min="0"
-                        step="0.01"
-                        value="0"
-                      />
-                      <select id="budgetFeeType">
-                        <option value="value">R$</option>
-                        <option value="percent">%</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="field-row">
-                  <div class="field">
-                    <label for="budgetPayment">Forma de pagamento</label>
-                    <input
-                      type="text"
-                      id="budgetPayment"
-                      placeholder="Ex: PIX à vista, 2x no cartão..."
-                    />
-                  </div>
-                  <div class="field">
-                    <label for="budgetDeadline">Prazo de execução</label>
-                    <input
-                      type="text"
-                      id="budgetDeadline"
-                      placeholder="Ex: 5 dias úteis"
-                    />
-                  </div>
-                </div>
-                <div class="field-row">
-                  <div class="field">
-                    <label for="budgetValidUntil">Validade do orçamento</label>
-                    <input type="date" id="budgetValidUntil" />
-                  </div>
-                  <div class="field">
-                    <label for="budgetStatus">Status</label>
-                    <select id="budgetStatus">
-                      <option value="pendente">Pendente</option>
-                      <option value="enviado">Enviado</option>
-                      <option value="aprovado">Aprovado</option>
-                      <option value="recusado">Recusado</option>
-                      <option value="concluido">Concluído</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="field">
-                  <label for="budgetNotes">Observações</label>
-                  <textarea
-                    id="budgetNotes"
-                    rows="3"
-                    placeholder="Informações adicionais para o cliente..."
-                  ></textarea>
+              <div class="field">
+                <label for="budgetFee">Taxa</label>
+                <div class="input-combo">
+                  <input type="number" id="budgetFee" min="0" step="0.01" value="0">
+                  <select id="budgetFeeType"><option value="value">R$</option><option value="percent">%</option></select>
                 </div>
               </div>
             </div>
-
-            <aside class="summary-panel">
-              <div class="summary-ticket">
-                <div class="ticket-head">
-                  <span class="ticket-label">Orçamento</span>
-                  <span class="ticket-number" id="ticketNumber">Nº 0001</span>
-                </div>
-                <div class="ticket-perforation"></div>
-                <div class="ticket-body">
-                  <div class="summary-row">
-                    <span>Subtotal</span><span id="sumSubtotal">R$ 0,00</span>
-                  </div>
-                  <div class="summary-row">
-                    <span>Desconto</span><span id="sumDiscount">- R$ 0,00</span>
-                  </div>
-                  <div class="summary-row">
-                    <span>Taxa</span><span id="sumFee">+ R$ 0,00</span>
-                  </div>
-                  <div class="ticket-perforation"></div>
-                  <div class="summary-row summary-total">
-                    <span>Total</span><span id="sumTotal">R$ 0,00</span>
-                  </div>
-                </div>
+            <div class="field-row">
+              <div class="field">
+                <label for="budgetPayment">Forma de pagamento</label>
+                <input type="text" id="budgetPayment" placeholder="Ex: PIX à vista, 2x no cartão...">
               </div>
-              <div class="summary-actions">
-                <button type="submit" class="btn btn-primary btn-block">
-                  <i class="fa-solid fa-floppy-disk"></i
-                  ><span>Salvar orçamento</span>
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary btn-block"
-                  id="btnCancelBudget"
-                >
-                  Cancelar
-                </button>
+              <div class="field">
+                <label for="budgetDeadline">Prazo de execução</label>
+                <input type="text" id="budgetDeadline" placeholder="Ex: 5 dias úteis">
               </div>
-            </aside>
-          </form>
-        </section>
-
-        <!-- ===================== HISTÓRICO ===================== -->
-        <section class="page" id="page-historico">
-          <div class="panel">
-            <div class="panel-header wrap">
-              <div class="search-box">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input
-                  type="text"
-                  id="historySearch"
-                  placeholder="Pesquisar por cliente ou número..."
-                />
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label for="budgetValidUntil">Validade do orçamento</label>
+                <input type="date" id="budgetValidUntil">
               </div>
-              <div class="filter-group">
-                <select id="filterStatus">
-                  <option value="">Todos os status</option>
+              <div class="field">
+                <label for="budgetStatus">Status</label>
+                <select id="budgetStatus">
                   <option value="pendente">Pendente</option>
                   <option value="enviado">Enviado</option>
                   <option value="aprovado">Aprovado</option>
                   <option value="recusado">Recusado</option>
                   <option value="concluido">Concluído</option>
                 </select>
-                <select id="filterClient">
-                  <option value="">Todos os clientes</option>
-                </select>
-                <select id="sortBy">
-                  <option value="date-desc">Mais recentes</option>
-                  <option value="date-asc">Mais antigos</option>
-                  <option value="value-desc">Maior valor</option>
-                  <option value="value-asc">Menor valor</option>
-                </select>
-                <button class="btn btn-secondary btn-sm" id="btnExportCsv">
-                  <i class="fa-solid fa-file-csv"></i><span>Exportar CSV</span>
-                </button>
               </div>
             </div>
-            <div class="table-wrap">
-              <table class="data-table" id="historyTable">
-                <thead>
-                  <tr>
-                    <th>Nº</th>
-                    <th>Cliente</th>
-                    <th>Data</th>
-                    <th>Validade</th>
-                    <th>Valor</th>
-                    <th>Status</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody id="historyBody"></tbody>
-              </table>
-            </div>
-            <div class="empty-state" id="historyEmpty" style="display: none">
-              <i class="fa-solid fa-inbox"></i>
-              <p>Nenhum orçamento encontrado.</p>
+            <div class="field">
+              <label for="budgetNotes">Observações</label>
+              <textarea id="budgetNotes" rows="3" placeholder="Informações adicionais para o cliente..."></textarea>
             </div>
           </div>
-        </section>
-
-        <!-- ===================== RELATÓRIOS ===================== -->
-        <section class="page" id="page-relatorios">
-          <div class="reports-grid">
-            <div class="panel">
-              <div class="panel-header"><h2>Orçamentos por mês</h2></div>
-              <div class="chart-box"><canvas id="chartByMonth"></canvas></div>
-            </div>
-            <div class="panel">
-              <div class="panel-header"><h2>Status dos orçamentos</h2></div>
-              <div class="chart-box"><canvas id="chartByStatus"></canvas></div>
-            </div>
-            <div class="panel">
-              <div class="panel-header"><h2>Valor faturado por mês</h2></div>
-              <div class="chart-box"><canvas id="chartRevenue"></canvas></div>
-            </div>
-            <div class="panel">
-              <div class="panel-header">
-                <h2>Clientes com mais orçamentos</h2>
-              </div>
-              <div class="chart-box">
-                <canvas id="chartTopClients"></canvas>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- ===================== CONFIGURAÇÕES ===================== -->
-        <section class="page" id="page-configuracoes">
-          <form class="panel settings-panel" id="settingsForm">
-            <div class="panel-header"><h2>Dados da empresa</h2></div>
-            <div class="settings-body">
-              <div class="logo-upload">
-                <div class="logo-preview" id="logoPreview">
-                  <i class="fa-solid fa-store"></i>
-                </div>
-                <div>
-                  <label class="btn btn-secondary btn-sm" for="settingsLogo"
-                    ><i class="fa-solid fa-upload"></i
-                    ><span>Enviar logo</span></label
-                  >
-                  <input
-                    type="file"
-                    id="settingsLogo"
-                    accept="image/*"
-                    hidden
-                  />
-                  <button type="button" class="btn-text" id="removeLogo">
-                    Remover logo
-                  </button>
-                </div>
-              </div>
-              <div class="field-row">
-                <div class="field">
-                  <label for="settingsName">Nome da empresa</label>
-                  <input
-                    type="text"
-                    id="settingsName"
-                    placeholder="Ex: João Silva Serviços"
-                  />
-                </div>
-                <div class="field">
-                  <label for="settingsPhone">Telefone</label>
-                  <input
-                    type="text"
-                    id="settingsPhone"
-                    placeholder="(00) 00000-0000"
-                  />
-                </div>
-              </div>
-              <div class="field-row">
-                <div class="field">
-                  <label for="settingsEmail">Email</label>
-                  <input
-                    type="email"
-                    id="settingsEmail"
-                    placeholder="contato@empresa.com"
-                  />
-                </div>
-                <div class="field">
-                  <label for="settingsCnpj"
-                    >CNPJ <span class="field-optional">(opcional)</span></label
-                  >
-                  <input
-                    type="text"
-                    id="settingsCnpj"
-                    placeholder="00.000.000/0000-00"
-                  />
-                </div>
-              </div>
-              <div class="field">
-                <label for="settingsAddress">Endereço</label>
-                <input
-                  type="text"
-                  id="settingsAddress"
-                  placeholder="Rua, número, bairro, cidade"
-                />
-              </div>
-              <div class="field">
-                <label for="settingsWhatsappMsg"
-                  >Mensagem padrão do WhatsApp</label
-                >
-                <textarea
-                  id="settingsWhatsappMsg"
-                  rows="3"
-                  placeholder="Olá {cliente}, segue o orçamento nº {numero}..."
-                ></textarea>
-                <p class="field-hint">
-                  Use {cliente}, {numero} e {valor} para preencher
-                  automaticamente.
-                </p>
-              </div>
-              <button type="submit" class="btn btn-primary">
-                Salvar configurações
-              </button>
-            </div>
-          </form>
-        </section>
-      </main>
-    </div>
-
-    <!-- ============ MODALS ============ -->
-    <div class="modal-overlay" id="clientModalOverlay">
-      <div class="modal">
-        <div class="modal-header">
-          <h3 id="clientModalTitle">Novo cliente</h3>
-          <button class="modal-close" id="clientModalClose">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
         </div>
-        <form id="clientForm" class="modal-body">
-          <input type="hidden" id="clientId" />
-          <div class="field-row">
-            <div class="field">
-              <label for="clientName">Nome *</label
-              ><input type="text" id="clientName" required />
+
+        <aside class="summary-panel">
+          <div class="summary-ticket">
+            <div class="ticket-head">
+              <span class="ticket-label">Orçamento</span>
+              <span class="ticket-number" id="ticketNumber">Nº 0001</span>
             </div>
-            <div class="field">
-              <label for="clientCompany">Empresa</label
-              ><input type="text" id="clientCompany" />
+            <div class="ticket-perforation"></div>
+            <div class="ticket-body">
+              <div class="summary-row"><span>Subtotal</span><span id="sumSubtotal">R$ 0,00</span></div>
+              <div class="summary-row"><span>Desconto</span><span id="sumDiscount">- R$ 0,00</span></div>
+              <div class="summary-row"><span>Taxa</span><span id="sumFee">+ R$ 0,00</span></div>
+              <div class="ticket-perforation"></div>
+              <div class="summary-row summary-total"><span>Total</span><span id="sumTotal">R$ 0,00</span></div>
+            </div>
+          </div>
+          <div class="summary-actions">
+            <button type="submit" class="btn btn-primary btn-block"><i class="fa-solid fa-floppy-disk"></i><span>Salvar orçamento</span></button>
+            <button type="button" class="btn btn-secondary btn-block" id="btnCancelBudget">Cancelar</button>
+          </div>
+        </aside>
+      </form>
+    </section>
+
+    <!-- ===================== HISTÓRICO ===================== -->
+    <section class="page" id="page-historico">
+      <div class="panel">
+        <div class="panel-header wrap">
+          <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="historySearch" placeholder="Pesquisar por cliente ou número...">
+          </div>
+          <div class="filter-group">
+            <select id="filterStatus">
+              <option value="">Todos os status</option>
+              <option value="pendente">Pendente</option>
+              <option value="enviado">Enviado</option>
+              <option value="aprovado">Aprovado</option>
+              <option value="recusado">Recusado</option>
+              <option value="concluido">Concluído</option>
+            </select>
+            <select id="filterClient"><option value="">Todos os clientes</option></select>
+            <select id="sortBy">
+              <option value="date-desc">Mais recentes</option>
+              <option value="date-asc">Mais antigos</option>
+              <option value="value-desc">Maior valor</option>
+              <option value="value-asc">Menor valor</option>
+            </select>
+            <button class="btn btn-secondary btn-sm" id="btnExportCsv"><i class="fa-solid fa-file-csv"></i><span>Exportar CSV</span></button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table" id="historyTable">
+            <thead>
+              <tr><th>Nº</th><th>Cliente</th><th>Data</th><th>Validade</th><th>Valor</th><th>Status</th><th></th></tr>
+            </thead>
+            <tbody id="historyBody"></tbody>
+          </table>
+        </div>
+        <div class="empty-state" id="historyEmpty" style="display:none;">
+          <i class="fa-solid fa-inbox"></i>
+          <p>Nenhum orçamento encontrado.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== RELATÓRIOS ===================== -->
+    <section class="page" id="page-relatorios">
+      <div class="reports-grid">
+        <div class="panel">
+          <div class="panel-header"><h2>Orçamentos por mês</h2></div>
+          <div class="chart-box"><canvas id="chartByMonth"></canvas></div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><h2>Status dos orçamentos</h2></div>
+          <div class="chart-box"><canvas id="chartByStatus"></canvas></div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><h2>Valor faturado por mês</h2></div>
+          <div class="chart-box"><canvas id="chartRevenue"></canvas></div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><h2>Clientes com mais orçamentos</h2></div>
+          <div class="chart-box"><canvas id="chartTopClients"></canvas></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== CONFIGURAÇÕES ===================== -->
+    <section class="page" id="page-configuracoes">
+      <form class="panel settings-panel" id="settingsForm">
+        <div class="panel-header"><h2>Dados da empresa</h2></div>
+        <div class="settings-body">
+          <div class="logo-upload">
+            <div class="logo-preview" id="logoPreview"><i class="fa-solid fa-store"></i></div>
+            <div>
+              <label class="btn btn-secondary btn-sm" for="settingsLogo"><i class="fa-solid fa-upload"></i><span>Enviar logo</span></label>
+              <input type="file" id="settingsLogo" accept="image/*" hidden>
+              <button type="button" class="btn-text" id="removeLogo">Remover logo</button>
             </div>
           </div>
           <div class="field-row">
             <div class="field">
-              <label for="clientPhone">Telefone</label
-              ><input
-                type="text"
-                id="clientPhone"
-                placeholder="(00) 00000-0000"
-              />
+              <label for="settingsName">Nome da empresa</label>
+              <input type="text" id="settingsName" placeholder="Ex: João Silva Serviços">
             </div>
             <div class="field">
-              <label for="clientWhatsapp">WhatsApp *</label
-              ><input
-                type="text"
-                id="clientWhatsapp"
-                placeholder="(00) 00000-0000"
-                required
-              />
+              <label for="settingsPhone">Telefone</label>
+              <input type="text" id="settingsPhone" placeholder="(00) 00000-0000">
             </div>
           </div>
           <div class="field-row">
             <div class="field">
-              <label for="clientEmail">Email</label
-              ><input type="email" id="clientEmail" />
+              <label for="settingsEmail">Email</label>
+              <input type="email" id="settingsEmail" placeholder="contato@empresa.com">
             </div>
             <div class="field">
-              <label for="clientDocument">CPF/CNPJ</label
-              ><input
-                type="text"
-                id="clientDocument"
-                placeholder="000.000.000-00"
-              />
-            </div>
-          </div>
-          <div class="field-row">
-            <div class="field">
-              <label for="clientAddress">Endereço</label
-              ><input type="text" id="clientAddress" />
-            </div>
-            <div class="field">
-              <label for="clientCity">Cidade</label
-              ><input type="text" id="clientCity" />
+              <label for="settingsCnpj">CNPJ <span class="field-optional">(opcional)</span></label>
+              <input type="text" id="settingsCnpj" placeholder="00.000.000/0000-00">
             </div>
           </div>
           <div class="field">
-            <label for="clientNotes">Observações</label
-            ><textarea id="clientNotes" rows="2"></textarea>
+            <label for="settingsAddress">Endereço</label>
+            <input type="text" id="settingsAddress" placeholder="Rua, número, bairro, cidade">
           </div>
-        </form>
-        <div class="modal-footer">
-          <button class="btn btn-secondary" id="clientCancelBtn">
-            Cancelar
-          </button>
-          <button class="btn btn-primary" id="clientSaveBtn">
-            <i class="fa-solid fa-floppy-disk"></i><span>Salvar cliente</span>
-          </button>
+          <div class="field">
+            <label for="settingsWhatsappMsg">Mensagem padrão do WhatsApp</label>
+            <textarea id="settingsWhatsappMsg" rows="3" placeholder="Olá {cliente}, segue o orçamento nº {numero}..."></textarea>
+            <p class="field-hint">Use {cliente}, {numero} e {valor} para preencher automaticamente.</p>
+          </div>
+          <button type="submit" class="btn btn-primary">Salvar configurações</button>
         </div>
-      </div>
+      </form>
+    </section>
+
+  </main>
+</div>
+
+<!-- ============ MODALS ============ -->
+<div class="modal-overlay" id="clientModalOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="clientModalTitle">Novo cliente</h3>
+      <button class="modal-close" id="clientModalClose"><i class="fa-solid fa-xmark"></i></button>
     </div>
-
-    <div class="modal-overlay" id="confirmModalOverlay">
-      <div class="modal modal-sm">
-        <div class="modal-header">
-          <h3 id="confirmTitle">Confirmar exclusão</h3>
-          <button class="modal-close" id="confirmModalClose">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-        </div>
-        <div class="modal-body">
-          <p id="confirmMessage">Esta ação não pode ser desfeita.</p>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary" id="confirmCancelBtn">
-            Cancelar
-          </button>
-          <button class="btn btn-danger" id="confirmOkBtn">
-            <i class="fa-solid fa-trash"></i><span>Excluir</span>
-          </button>
-        </div>
+    <form id="clientForm" class="modal-body">
+      <input type="hidden" id="clientId">
+      <div class="field-row">
+        <div class="field"><label for="clientName">Nome *</label><input type="text" id="clientName" required></div>
+        <div class="field"><label for="clientCompany">Empresa</label><input type="text" id="clientCompany"></div>
       </div>
-    </div>
-
-    <div class="modal-overlay" id="viewModalOverlay">
-      <div class="modal modal-lg">
-        <div class="modal-header">
-          <h3 id="viewModalTitle">Orçamento Nº 0001</h3>
-          <button class="modal-close" id="viewModalClose">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-        </div>
-        <div class="modal-body" id="viewModalBody"></div>
-        <div class="modal-footer view-modal-footer">
-          <button class="btn btn-secondary" id="btnDuplicate">
-            <i class="fa-solid fa-copy"></i><span>Duplicar</span>
-          </button>
-          <button class="btn btn-secondary" id="btnEditFromView">
-            <i class="fa-solid fa-pen"></i><span>Editar</span>
-          </button>
-          <button class="btn btn-whatsapp" id="btnWhatsapp">
-            <i class="fa-brands fa-whatsapp"></i><span>Enviar</span>
-          </button>
-          <button class="btn btn-primary" id="btnPdf">
-            <i class="fa-solid fa-file-pdf"></i><span>Gerar PDF</span>
-          </button>
-        </div>
+      <div class="field-row">
+        <div class="field"><label for="clientPhone">Telefone</label><input type="text" id="clientPhone" placeholder="(00) 00000-0000"></div>
+        <div class="field"><label for="clientWhatsapp">WhatsApp *</label><input type="text" id="clientWhatsapp" placeholder="(00) 00000-0000" required></div>
       </div>
+      <div class="field-row">
+        <div class="field"><label for="clientEmail">Email</label><input type="email" id="clientEmail"></div>
+        <div class="field"><label for="clientDocument">CPF/CNPJ</label><input type="text" id="clientDocument" placeholder="000.000.000-00"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label for="clientAddress">Endereço</label><input type="text" id="clientAddress"></div>
+        <div class="field"><label for="clientCity">Cidade</label><input type="text" id="clientCity"></div>
+      </div>
+      <div class="field"><label for="clientNotes">Observações</label><textarea id="clientNotes" rows="2"></textarea></div>
+    </form>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="clientCancelBtn">Cancelar</button>
+      <button class="btn btn-primary" id="clientSaveBtn"><i class="fa-solid fa-floppy-disk"></i><span>Salvar cliente</span></button>
     </div>
+  </div>
+</div>
 
-    <div class="toast-stack" id="toastStack"></div>
+<div class="modal-overlay" id="confirmModalOverlay">
+  <div class="modal modal-sm">
+    <div class="modal-header">
+      <h3 id="confirmTitle">Confirmar exclusão</h3>
+      <button class="modal-close" id="confirmModalClose"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body"><p id="confirmMessage">Esta ação não pode ser desfeita.</p></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="confirmCancelBtn">Cancelar</button>
+      <button class="btn btn-danger" id="confirmOkBtn"><i class="fa-solid fa-trash"></i><span>Excluir</span></button>
+    </div>
+  </div>
+</div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/chart.js/4.4.1/chart.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.1/jspdf.plugin.autotable.min.js"></script>
-    <script src="script.js"></script>
-  </body>
+<div class="modal-overlay" id="viewModalOverlay">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <h3 id="viewModalTitle">Orçamento Nº 0001</h3>
+      <button class="modal-close" id="viewModalClose"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body" id="viewModalBody"></div>
+    <div class="modal-footer view-modal-footer">
+      <button class="btn btn-secondary" id="btnDuplicate"><i class="fa-solid fa-copy"></i><span>Duplicar</span></button>
+      <button class="btn btn-secondary" id="btnEditFromView"><i class="fa-solid fa-pen"></i><span>Editar</span></button>
+      <button class="btn btn-whatsapp" id="btnWhatsapp"><i class="fa-brands fa-whatsapp"></i><span>Enviar</span></button>
+      <button class="btn btn-primary" id="btnPdf"><i class="fa-solid fa-file-pdf"></i><span>Gerar PDF</span></button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-stack" id="toastStack"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.1/jspdf.plugin.autotable.min.js"></script>
+<script src="script.js"></script>
+</body>
 </html>
